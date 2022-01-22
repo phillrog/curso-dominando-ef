@@ -12,7 +12,8 @@ namespace DominandoEFCore
         static void Main(string[] args)
         {
             //EnsureCreatedAndDeleted();
-            GapEnsureCreated();
+            //GapEnsureCreated();
+            HealthCheckBancoDeDadosAgora();
         }
 
         static void EnsureCreatedAndDeleted() {
@@ -32,6 +33,34 @@ namespace DominandoEFCore
 
             var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
             databaseCreator.CreateTables();
+        }
+
+        static void HealthCheckBancoDeDadosAntes(){
+            using var db = new Curso.Data.ApplicationContext();
+
+            try 
+            {
+                //1
+                var connection = db.Database.GetDbConnection();
+                connection.Open();
+
+                //2
+                db.Departamentos.Any();
+                Console.WriteLine("Banco de dados funcionando");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Banco de dados não está funcionando");
+            } 
+        }
+        static void HealthCheckBancoDeDadosAgora(){
+            using var db = new Curso.Data.ApplicationContext();
+            var canConnect = db.Database.CanConnect();
+
+            if (canConnect)
+                Console.WriteLine("Banco de dados funcionando");
+            else
+                Console.WriteLine("Banco de dados não está funcionando");
         }
     }
 }
