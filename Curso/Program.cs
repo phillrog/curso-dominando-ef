@@ -13,7 +13,42 @@ namespace DominandoEFCore
         {
             //EnsureCreatedAndDeleted();
             //GapEnsureCreated();
-            HealthCheckBancoDeDadosAgora();
+            //HealthCheckBancoDeDadosAgora();
+
+            new Curso.Data.ApplicationContext().Departamentos.AsNoTracking().Any();
+
+            GerenciarEstadoDaConexao(false);
+            GerenciarEstadoDaConexao(true);
+        }
+
+        static Curso.Data.ApplicationContext NovaConexao() {
+            return new Curso.Data.ApplicationContext();
+        }
+
+        static int _count = 0;
+        static void GerenciarEstadoDaConexao(bool gerenciarEstadoConexao)
+        {
+            _count = 0;
+            using var db = NovaConexao();
+            var time = System.Diagnostics.Stopwatch.StartNew();
+
+            var conexao = db.Database.GetDbConnection();
+
+            conexao.StateChange += (_, __ ) => ++ _count; 
+
+            if(gerenciarEstadoConexao){
+                conexao.Open();
+            }
+
+            for (int i = 0; i < 200; i++)
+            {
+                db.Departamentos.AsNoTracking().Any();
+            } 
+
+            time.Stop();
+            var msg = $"Tempo: {time.Elapsed.ToString() }, {gerenciarEstadoConexao}, Contador: {_count}";
+
+            Console.WriteLine(msg);
         }
 
         static void EnsureCreatedAndDeleted() {
