@@ -11,16 +11,32 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //EnsureCreatedAndDeleted();
-            //GapEnsureCreated();
-            //HealthCheckBancoDeDadosAgora();
+            //EnsureCreatedAndDeleted(); // 1
+            //GapEnsureCreated(); // 2
+            //HealthCheckBancoDeDadosAgora(); // 3
 
-            new Curso.Data.ApplicationContext().Departamentos.AsNoTracking().Any();
+            // new Curso.Data.ApplicationContext().Departamentos.AsNoTracking().Any(); // 4
+            // GerenciarEstadoDaConexao(false); // 4
+            // GerenciarEstadoDaConexao(true); // 4
 
-            GerenciarEstadoDaConexao(false);
-            GerenciarEstadoDaConexao(true);
+
         }
 
+        static void ExecuteSQL(){
+            using var db = NovaConexao();
+            // Forma 1 - criando comando
+            using (var cmd = db.Database.GetDbConnection().CreateCommand()){
+                cmd.CommandText = "SELECT 1";
+                cmd.ExecuteNonQuery();
+            }
+
+            // Forma 2 - sql explicito com parametros
+            var descricao = "Teste";
+            db.Database.ExecuteSqlRaw("update departamentos set descricap={0} where Id = 1", descricao);
+
+            // Forma 3 - parametros em interpolação
+            db.Database.ExecuteSqlInterpolated($"update departamentos set descricap={descricao} where Id = 1");
+        }
         static Curso.Data.ApplicationContext NovaConexao() {
             return new Curso.Data.ApplicationContext();
         }
