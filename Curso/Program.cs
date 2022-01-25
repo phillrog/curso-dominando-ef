@@ -22,6 +22,45 @@ namespace DominandoEFCore
 
         }
 
+        static void SqlInjection(){
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Departamentos.AddRange(
+                new Curso.Domain.Departamento {
+                    Descricao = "Departamento 01"
+                },
+                new Curso.Domain.Departamento {
+                    Descricao = "Departamento 02"
+                }
+            );
+
+            db.SaveChanges();
+            
+            foreach (var departamento in db.Departamentos.AsNoTracking())
+            {
+                Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao} ");
+            }
+
+            /// Correto
+            var descricao = "Departamento 01";
+            db.Database.ExecuteSqlRaw("update departamentos set descricao ='Departamento alterado' where descricao={0}", descricao);
+
+            foreach (var departamento in db.Departamentos.AsNoTracking())
+            {
+                Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao} ");
+            }
+
+            /// Errado
+            descricao = "Teste ' OR 1='1'";
+            db.Database.ExecuteSqlRaw($"update departamentos set descricao ='AtaqueSQLInjection' where descricao={descricao}");
+
+            foreach (var departamento in db.Departamentos.AsNoTracking())
+            {
+                Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao} ");
+            }
+        }
         static void ExecuteSQL(){
             using var db = NovaConexao();
             // Forma 1 - criando comando
