@@ -19,7 +19,16 @@ namespace DominandoEFCore
             // GerenciarEstadoDaConexao(false); // 4
             // GerenciarEstadoDaConexao(true); // 4
             //SqlInjection()
-            MigracoesPendentes();
+            //MigracoesPendentes();
+            AplicarMigracaoEmTempoDeExecucao();
+        }
+
+        /// Não é uma boa pratica
+        private static void AplicarMigracaoEmTempoDeExecucao()
+        {
+           using var db = NovaConexao();
+
+           db.Database.Migrate(); 
         }
 
         /// Detectar migrações que não foram executadas
