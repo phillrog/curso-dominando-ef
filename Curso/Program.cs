@@ -18,10 +18,23 @@ namespace DominandoEFCore
             // new Curso.Data.ApplicationContext().Departamentos.AsNoTracking().Any(); // 4
             // GerenciarEstadoDaConexao(false); // 4
             // GerenciarEstadoDaConexao(true); // 4
-            //SqlInjection()
-            //MigracoesPendentes();
-            // AplicarMigracaoEmTempoDeExecucao();
-            TodasAsMigracoes();
+            //SqlInjection() //5
+            //MigracoesPendentes(); //6
+            // AplicarMigracaoEmTempoDeExecucao(); //7
+            //TodasAsMigracoes(); //8
+            MigracoesJaAplicadas();
+        }
+
+        private static void MigracoesJaAplicadas()
+        {
+            using var db = NovaConexao();
+            var migracoes = db.Database.GetAppliedMigrations();
+            Console.WriteLine($"Total: {migracoes.Count()}");
+
+            foreach (var migracao in migracoes)
+            {
+                Console.WriteLine($"Migração: {migracao}");
+            }
         }
 
         private static void TodasAsMigracoes()
