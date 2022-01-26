@@ -20,7 +20,20 @@ namespace DominandoEFCore
             // GerenciarEstadoDaConexao(true); // 4
             //SqlInjection()
             //MigracoesPendentes();
-            AplicarMigracaoEmTempoDeExecucao();
+            // AplicarMigracaoEmTempoDeExecucao();
+            TodasAsMigracoes();
+        }
+
+        private static void TodasAsMigracoes()
+        {
+            using var db = NovaConexao();
+            var migracoes = db.Database.GetMigrations();
+            Console.WriteLine($"Total: {migracoes.Count()}");
+
+            foreach (var migracao in migracoes)
+            {
+                Console.WriteLine($"Migração: {migracao}");
+            }
         }
 
         /// Não é uma boa pratica
