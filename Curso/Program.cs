@@ -22,7 +22,17 @@ namespace DominandoEFCore
             //MigracoesPendentes(); //6
             // AplicarMigracaoEmTempoDeExecucao(); //7
             //TodasAsMigracoes(); //8
-            MigracoesJaAplicadas();
+           // MigracoesJaAplicadas(); 9
+
+           ScriptGeralDoBancoDeDados();
+        }
+
+        private static void ScriptGeralDoBancoDeDados()
+        {
+            using var db = NovaConexao();
+            var script = db.Database.GenerateCreateScript();
+
+            Console.WriteLine(script);
         }
 
         private static void MigracoesJaAplicadas()
