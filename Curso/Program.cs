@@ -24,7 +24,81 @@ namespace DominandoEFCore
             //TodasAsMigracoes(); //8
            // MigracoesJaAplicadas(); 9
 
-           ScriptGeralDoBancoDeDados();
+           //ScriptGeralDoBancoDeDados();
+
+           CarregamentoAdiantado();
+        }
+
+        static void CarregamentoAdiantado()
+        {
+            using var db = new Curso.Data.ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db
+                .Departamentos
+                .Include(p => p.Funcionarios);
+
+            foreach (var departamento in departamentos)
+            {
+
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum funcionario encontrado!");
+                }
+            }
+        }
+
+        static void SetupTiposCarregamentos(Curso.Data.ApplicationContext db)
+        {
+            if (!db.Departamentos.Any())
+            {
+                db.Departamentos.AddRange(
+                    new Curso.Domain.Departamento
+                    {
+                        Descricao = "Departamento 01",
+                        Funcionarios = new System.Collections.Generic.List<Curso.Domain.Funcionario>
+                        {
+                            new Curso.Domain.Funcionario
+                            {
+                                Nome = "Teste 01",
+                                CPF = "99999999999",
+                                RG= "00000000"
+                            }
+                        }
+                    },
+                    new Curso.Domain.Departamento
+                    {
+                        Descricao = "Departamento 02",
+                        Funcionarios = new System.Collections.Generic.List<Curso.Domain.Funcionario>
+                        {
+                            new Curso.Domain.Funcionario
+                            {
+                                Nome = "Tese 02",
+                                CPF = "111111111",
+                                RG= "3333333"
+                            },
+                            new Curso.Domain.Funcionario
+                            {
+                                Nome = "Teste 03",
+                                CPF = "33333333",
+                                RG= "77777777"
+                            }
+                        }
+                    });
+
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
         }
 
         private static void ScriptGeralDoBancoDeDados()
