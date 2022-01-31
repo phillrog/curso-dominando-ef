@@ -9,6 +9,6 @@ namespace Curso.Domain
         public bool Excluido { get; set; }
         
         public int DepartamentoId { get; set; }
-        public Departamento Departamento { get; set; }
+        public virtual Departamento Departamento { get; set; }
     }
 }

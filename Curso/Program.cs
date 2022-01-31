@@ -26,9 +26,73 @@ namespace DominandoEFCore
 
            //ScriptGeralDoBancoDeDados();
 
-           CarregamentoAdiantado();
+           //CarregamentoAdiantado();
+           //CarregamentoExplicito();
+            CarregamentoLento();
         }
 
+        static void CarregamentoLento()
+        {
+            using var db = new Curso.Data.ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            //db.ChangeTracker.LazyLoadingEnabled = false;
+
+            var departamentos = db
+                .Departamentos
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum funcionario encontrado!");
+                }
+            }
+        }
+        static void CarregamentoExplicito()
+        {
+            using var db = NovaConexao();
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db
+                .Departamentos
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                if(departamento.Id == 2)
+                {
+                    //db.Entry(departamento).Collection(p=>p.Funcionarios).Load();
+                    db.Entry(departamento).Collection(p=>p.Funcionarios).Query().Where(p=>p.Id > 2).ToList();
+                }
+
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum funcionario encontrado!");
+                }
+            }
+        }
         static void CarregamentoAdiantado()
         {
             using var db = new Curso.Data.ApplicationContext();
