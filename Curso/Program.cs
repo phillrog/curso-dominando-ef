@@ -30,7 +30,21 @@ namespace DominandoEFCore
            //CarregamentoExplicito();
             //CarregamentoLento();
 
-            FiltroGlobal();
+            //FiltroGlobal();
+            IgnoreFiltroGlobal();
+        }
+
+        static void IgnoreFiltroGlobal()
+        {
+            using var db = NovaConexao();
+            Setup(db);
+
+            var departamentos = db.Departamentos.IgnoreQueryFilters().Where(p => p.Id > 0).ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
         }
 
         static void FiltroGlobal()
