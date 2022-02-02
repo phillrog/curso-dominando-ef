@@ -31,9 +31,30 @@ namespace DominandoEFCore
             //CarregamentoLento();
 
             //FiltroGlobal();
-            IgnoreFiltroGlobal();
+            //IgnoreFiltroGlobal();
+            ConsultaProjetada();
         }
 
+        static void ConsultaProjetada()
+        {
+            using var db = NovaConexao();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .Where(p => p.Id > 0)
+                .Select(p => new { p.Descricao, Funcionarios = p.Funcionarios.Select(f => f.Nome) })
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+
+                foreach (var funcionario in departamento.Funcionarios)
+                {
+                    Console.WriteLine($"\t Nome: {funcionario}");
+                }
+            }
+        }
         static void IgnoreFiltroGlobal()
         {
             using var db = NovaConexao();
