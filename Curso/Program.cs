@@ -33,9 +33,25 @@ namespace DominandoEFCore
             //FiltroGlobal();
             //IgnoreFiltroGlobal();
             // ConsultaProjetada();
-            ConsultaParametrizada();
+            //ConsultaParametrizada();
+            ConsultaInterpolada();
         }
 
+        static void ConsultaInterpolada()
+        {
+            using var db = NovaConexao();
+            Setup(db);
+
+            var id = 1;
+            var departamentos = db.Departamentos
+                .FromSqlInterpolated($"SELECT * FROM Departamentos WHERE Id>{id}")
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
         static void ConsultaParametrizada()
         {
             using var db = new Curso.Data.ApplicationContext();
