@@ -35,9 +35,38 @@ namespace DominandoEFCore
             // ConsultaProjetada();
             //ConsultaParametrizada();
             //ConsultaInterpolada();
-            ConsultaComTAG();
+            //ConsultaComTAG();
+            EntendendoConsulta1NN1();
         }
 
+        static void EntendendoConsulta1NN1()
+        {
+            using var db = new Curso.Data.ApplicationContext();
+            Setup(db);
+
+            var funcionarios = db.Funcionarios
+                .Include(p => p.Departamento)
+                .ToList();
+
+
+            foreach (var funcionario in funcionarios)
+            {
+                Console.WriteLine($"Nome: {funcionario.Nome} / Descricap Dep: {funcionario.Departamento.Descricao}");
+            }
+
+            /*var departamentos = db.Departamentos
+                .Include(p=>p.Funcionarios)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+                foreach (var funcionario in departamento.Funcionarios)
+                {
+                    Console.WriteLine($"\tNome: {funcionario.Nome}");
+                }
+            }*/
+        }
         static void ConsultaComTAG()
         {
             using var db = new Curso.Data.ApplicationContext();
