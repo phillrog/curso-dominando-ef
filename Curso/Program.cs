@@ -36,7 +36,7 @@ namespace DominandoEFCore
             //ConsultaParametrizada();
             ConsultaInterpolada();
         }
-
+ 
         static void ConsultaInterpolada()
         {
             using var db = NovaConexao();
