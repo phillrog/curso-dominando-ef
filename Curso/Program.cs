@@ -38,8 +38,16 @@ namespace DominandoEFCore
             //ConsultaComTAG();
             //EntendendoConsulta1NN1();
             //DivisaoDeConsulta();
-            CriarStoredProcedure();
+            //CriarStoredProcedure();
+            InserirDadosViaProcedure();
             //CriarStoredProcedureDeConsulta();
+        }
+
+        static void InserirDadosViaProcedure()
+        {
+            using var db = NovaConexao();
+
+            db.Database.ExecuteSqlRaw("execute CriarDepartamento @p0, @p1", "Departamento Via Procedure", true);
         }
 
         static void CriarStoredProcedure()
