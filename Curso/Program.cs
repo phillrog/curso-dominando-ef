@@ -39,8 +39,26 @@ namespace DominandoEFCore
             //EntendendoConsulta1NN1();
             //DivisaoDeConsulta();
             //CriarStoredProcedure();
-            InserirDadosViaProcedure();
+            //InserirDadosViaProcedure();
             //CriarStoredProcedureDeConsulta();
+            ConsultaViaProcedure();
+        }
+
+        static void ConsultaViaProcedure()
+        {
+            using var db = NovaConexao();
+
+            var dep = new SqlParameter("@dep", "Departamento");
+
+            var departamentos = db.Departamentos
+                //.FromSqlRaw("EXECUTE GetDepartamentos @dep", dep)
+                .FromSqlInterpolated($"EXECUTE GetDepartamentos {dep}")
+                .ToList();
+
+            foreach(var departamento in departamentos)
+            {
+                Console.WriteLine(departamento.Descricao);
+            }
         }
 
         static void InserirDadosViaProcedure()
