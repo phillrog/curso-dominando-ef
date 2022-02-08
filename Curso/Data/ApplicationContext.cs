@@ -17,7 +17,8 @@ namespace Curso.Data
             optionsBuilder
                 .UseSqlServer(strConnection, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .EnableSensitiveDataLogging()
-                .UseLazyLoadingProxies();
+                .UseLazyLoadingProxies()
+                .LogTo(Console.WriteLine, LogLevel.Information);
                 //.LogTo(Console.WriteLine, LogLevel.Information);
         }        
 
