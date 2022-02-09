@@ -1,6 +1,7 @@
 using System;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.Logging;
 
@@ -18,8 +19,11 @@ namespace Curso.Data
                 .UseSqlServer(strConnection, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .EnableSensitiveDataLogging()
                 .UseLazyLoadingProxies()
-                .LogTo(Console.WriteLine, LogLevel.Information);
-                //.LogTo(Console.WriteLine, LogLevel.Information);
+                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .LogTo(Console.WriteLine, new [] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
+                LogLevel.Information,
+                DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
+                );
         }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
