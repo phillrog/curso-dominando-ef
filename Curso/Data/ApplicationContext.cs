@@ -18,11 +18,14 @@ namespace Curso.Data
         {
             const string strConnection="Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
             optionsBuilder
-                .UseSqlServer(strConnection, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                .MaxBatchSize(100)
-                .CommandTimeout(5))
-                .EnableSensitiveDataLogging()
-                .UseLazyLoadingProxies()
+                .UseSqlServer(strConnection,
+                p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                    .MaxBatchSize(100)
+                    .CommandTimeout(5)
+                    .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null)
+                )
+                .EnableSensitiveDataLogging()                
+                // .UseLazyLoadingProxies()
                 .LogTo(Console.WriteLine, LogLevel.Information);
                 // .LogTo(Console.WriteLine, new [] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
                 // LogLevel.Information,
