@@ -43,7 +43,25 @@ namespace DominandoEFCore
             //CriarStoredProcedureDeConsulta();
             //ConsultaViaProcedure();
             //ConsultarDepartamentos();
-            DadosSensiveis();
+            //DadosSensiveis();
+        }
+
+        static void HabilitandoBatchSize()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            for (var i = 0; i < 50; i++)
+            {
+                db.Departamentos.Add(
+                    new Departamento
+                    {
+                        Descricao = "Departamento " + i
+                    });
+            }
+
+            db.SaveChanges();
         }
 
         static void DadosSensiveis()
