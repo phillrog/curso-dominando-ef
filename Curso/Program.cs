@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Curso.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -44,6 +45,16 @@ namespace DominandoEFCore
             //ConsultaViaProcedure();
             //ConsultarDepartamentos();
             //DadosSensiveis();
+            TempoComandoGeral();
+        }
+
+        static void TempoComandoGeral()
+        {
+            using var db = NovaConexao();
+
+            db.Database.SetCommandTimeout(10);
+
+            db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07';SELECT 1");
         }
 
         static void HabilitandoBatchSize()
