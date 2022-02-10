@@ -45,7 +45,25 @@ namespace DominandoEFCore
             //ConsultaViaProcedure();
             //ConsultarDepartamentos();
             //DadosSensiveis();
-            TempoComandoGeral();
+            //TempoComandoGeral();
+            ExecutarEstrategiaResiliencia();
+        }
+
+        static void ExecutarEstrategiaResiliencia()
+        {
+            using var db = NovaConexao();
+
+            var strategy = db.Database.CreateExecutionStrategy();
+            strategy.Execute(()=>
+            {
+                using var transaction = db.Database.BeginTransaction();
+
+                db.Departamentos.Add(new Departamento { Descricao = "Departamento Transacao"});
+                db.SaveChanges();
+
+                transaction.Commit();
+            });
+
         }
 
         static void TempoComandoGeral()
