@@ -42,7 +42,16 @@ namespace DominandoEFCore
             //InserirDadosViaProcedure();
             //CriarStoredProcedureDeConsulta();
             //ConsultaViaProcedure();
-            ConsultarDepartamentos();
+            //ConsultarDepartamentos();
+            DadosSensiveis();
+        }
+
+        static void DadosSensiveis()
+        {
+            using var db = NovaConexao();
+
+            var descricao = "Departamento";
+            var departamentos = db.Departamentos.Where(p => p.Descricao == descricao).ToArray();
         }
 
         static void ConsultarDepartamentos()

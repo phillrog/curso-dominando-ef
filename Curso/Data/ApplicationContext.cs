@@ -21,13 +21,13 @@ namespace Curso.Data
                 .UseSqlServer(strConnection, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .EnableSensitiveDataLogging()
                 .UseLazyLoadingProxies()
-                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .LogTo(Console.WriteLine, LogLevel.Information);
                 // .LogTo(Console.WriteLine, new [] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
                 // LogLevel.Information,
                 // DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
                 // );
                 // .LogTo(_writer.WriteLine, LogLevel.Information);
-                .EnableDetailedErrors();
+                // .EnableDetailedErrors();
         }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
