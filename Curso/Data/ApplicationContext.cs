@@ -26,7 +26,8 @@ namespace Curso.Data
                 // LogLevel.Information,
                 // DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
                 // );
-                .LogTo(_writer.WriteLine, LogLevel.Information);
+                // .LogTo(_writer.WriteLine, LogLevel.Information);
+                .EnableDetailedErrors();
         }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
