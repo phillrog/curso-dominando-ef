@@ -38,6 +38,11 @@ namespace Curso.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Departamento>().HasQueryFilter(p=>!p.Excluido);
+            // modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+
+            modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
+                .UseCollation("SQL_Latin1_General_CP1_CS_AS");
         }
 
         public override void Dispose()
