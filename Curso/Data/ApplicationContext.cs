@@ -13,6 +13,7 @@ namespace Curso.Data
         private readonly StreamWriter _writer = new StreamWriter("Log_sistema.txt", append: true);
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,6 +61,11 @@ namespace Curso.Data
                 .HasFilter("DESCRICAO IS NOT NULL")
                 .HasFillFactor(80)
                 .IsUnique();
+
+            modelBuilder.Entity<Departamento>()
+                .HasData(new [] {
+                    new Estado() {  Id = 1, Nome = "São Paulo"}
+                });
         }
 
         public override void Dispose()

@@ -47,9 +47,19 @@ namespace DominandoEFCore
             //DadosSensiveis();
             //TempoComandoGeral();
             //ExecutarEstrategiaResiliencia();
-            Collations();
+            //Collations();
+            PropagarDados();
         }
 
+        static void PropagarDados()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var script = db.Database.GenerateCreateScript();
+            Console.WriteLine(script);
+        }
         static void Collations()
         {
             using var db = NovaConexao();
