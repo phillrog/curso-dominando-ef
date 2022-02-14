@@ -43,6 +43,15 @@ namespace Curso.Data
 
             modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
                 .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            modelBuilder.HasSequence("MinhaSequencia","sequencias").StartsAt(1)
+            .IncrementsBy(2)
+            .HasMin(1)
+            .HasMax(10)
+            .IsCyclic();
+
+            modelBuilder.Entity<Departamento>().Property(p => p.Id)
+            .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia");
         }
 
         public override void Dispose()
