@@ -51,21 +51,23 @@ namespace Curso.Data
             .HasMax(10)
             .IsCyclic();
 
-            modelBuilder.Entity<Departamento>().Property(p => p.Id)
-            .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia");
+            // modelBuilder.Entity<Departamento>().Property(p => p.Id)
+            // .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia");
 
-            modelBuilder
-                .Entity<Departamento>()
-                .HasIndex(p => new { p.Descricao, p.Ativo})
-                .HasDatabaseName("idx_meu_indice_composto")
-                .HasFilter("DESCRICAO IS NOT NULL")
-                .HasFillFactor(80)
-                .IsUnique();
+            // modelBuilder
+            //     .Entity<Departamento>()
+            //     .HasIndex(p => new { p.Descricao, p.Ativo})
+            //     .HasDatabaseName("idx_meu_indice_composto")
+            //     .HasFilter("DESCRICAO IS NOT NULL")
+            //     .HasFillFactor(80)
+            //     .IsUnique();
 
-            modelBuilder.Entity<Departamento>()
-                .HasData(new [] {
-                    new Estado() {  Id = 1, Nome = "São Paulo"}
-                });
+            // modelBuilder.Entity<Departamento>()
+            //     .HasData(new [] {
+            //         new Estado() {  Id = 1, Nome = "São Paulo"}
+            //     });
+            modelBuilder.HasDefaultSchema("cadastros");
+             modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
         }
 
         public override void Dispose()
