@@ -20,4 +20,10 @@ namespace Curso.Domain
         EFCore3,
         EFCore5,
     }
+
+    public enum Status {
+        Analise,
+        Enviado,
+        Devolvido
+    }
 }
