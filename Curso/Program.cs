@@ -49,9 +49,11 @@ namespace DominandoEFCore
             //ExecutarEstrategiaResiliencia();
             //Collations();
             //PropagarDados();
-            Esquema();
+            //Esquema();
+            ConversorDeValor();
         }
 
+        static void ConversorDeValor() => Esquema();
         static void Esquema()
         {
             using var db = NovaConexao();

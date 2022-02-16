@@ -4,6 +4,7 @@ using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Proxies;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 
 namespace Curso.Data
@@ -14,7 +15,7 @@ namespace Curso.Data
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
-
+        public DbSet<Conversor> Conversores { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection="Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
@@ -68,6 +69,17 @@ namespace Curso.Data
             //     });
             modelBuilder.HasDefaultSchema("cadastros");
              modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
+
+
+            var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
+            var conversao1 = new EnumToStringConverter<Versao>();
+
+             modelBuilder.Entity<Conversor>()
+                .Property(p => p.Versao)
+                .HasConversion(conversao1);
+            //.HasConversion(conversao);
+            //.HasConversion(p=>p.ToString(), p=> (Versao)Enum.Parse(typeof(Versao), p));
+            //.HasConversion<string>();
         }
 
         public override void Dispose()
