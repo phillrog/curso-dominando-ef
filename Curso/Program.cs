@@ -51,7 +51,14 @@ namespace DominandoEFCore
             //PropagarDados();
             //Esquema();
             //ConversorDeValor();
-            ConversorCustomizado();
+            //ConversorCustomizado();
+            PropriedadesDeSombra();
+        }
+        static void PropriedadesDeSombra()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
 
         static void ConversorCustomizado()
