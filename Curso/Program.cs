@@ -53,7 +53,37 @@ namespace DominandoEFCore
             //ConversorDeValor();
             //ConversorCustomizado();
             //PropriedadesDeSombra();
-            TrabalhandoComPropriedadesDeSombra();
+            //TrabalhandoComPropriedadesDeSombra();
+            TiposDePropriedades();
+        }
+
+        static void TiposDePropriedades()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var cliente = new Cliente
+            {
+                Nome = "Fulano de tal",
+                Telefone = "(79) 98888-9999",
+                Endereco = new Endereco { Bairro = "Centro", Cidade = "Sao Paulo" }
+            };
+
+            db.Clientes.Add(cliente);
+
+            db.SaveChanges();
+
+            var clientes = db.Clientes.AsNoTracking().ToList();
+
+            var options = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
+
+            clientes.ForEach(cli =>
+            {
+                var json = System.Text.Json.JsonSerializer.Serialize(cli, options);
+
+                Console.WriteLine(json);
+            });
         }
 
         static void TrabalhandoComPropriedadesDeSombra()

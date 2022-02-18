@@ -16,6 +16,7 @@ namespace Curso.Data
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Conversor> Conversores { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection="Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
@@ -86,6 +87,12 @@ namespace Curso.Data
                 .HasConversion(new Curso.Conversores.ConversorCustomizado());
 
             modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");    
+            modelBuilder.Entity<Cliente>(p => {
+                p.OwnsOne(x=> x.Endereco, end => {
+                    end.Property(p => p.Bairro).HasColumnName("Bairro");
+                    end.ToTable("Endereco");
+                });
+            });
         }
 
         public override void Dispose()
