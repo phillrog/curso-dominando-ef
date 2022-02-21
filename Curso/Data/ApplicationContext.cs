@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -68,31 +69,34 @@ namespace Curso.Data
             //     .HasData(new [] {
             //         new Estado() {  Id = 1, Nome = "São Paulo"}
             //     });
-            modelBuilder.HasDefaultSchema("cadastros");
-             modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
+            // modelBuilder.HasDefaultSchema("cadastros");
+            //  modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
 
 
-            var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
-            var conversao1 = new EnumToStringConverter<Versao>();
+            // var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
+            // var conversao1 = new EnumToStringConverter<Versao>();
 
-             modelBuilder.Entity<Conversor>()
-                .Property(p => p.Versao)
-                .HasConversion(conversao1);
+            //  modelBuilder.Entity<Conversor>()
+            //     .Property(p => p.Versao)
+            //     .HasConversion(conversao1);
             //.HasConversion(conversao);
             //.HasConversion(p=>p.ToString(), p=> (Versao)Enum.Parse(typeof(Versao), p));
             //.HasConversion<string>();
 
-            modelBuilder.Entity<Conversor>()
-                .Property(p => p.Status)
-                .HasConversion(new Curso.Conversores.ConversorCustomizado());
+            // modelBuilder.Entity<Conversor>()
+            //     .Property(p => p.Status)
+            //     .HasConversion(new Curso.Conversores.ConversorCustomizado());
 
-            modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");    
-            modelBuilder.Entity<Cliente>(p => {
-                p.OwnsOne(x=> x.Endereco, end => {
-                    end.Property(p => p.Bairro).HasColumnName("Bairro");
-                    end.ToTable("Endereco");
-                });
-            });
+            // modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");    
+            // modelBuilder.Entity<Cliente>(p => {
+            //     p.OwnsOne(x=> x.Endereco, end => {
+            //         end.Property(p => p.Bairro).HasColumnName("Bairro");
+            //         end.ToTable("Endereco");
+            //     });
+            // });
+
+            // modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
         }
 
         public override void Dispose()

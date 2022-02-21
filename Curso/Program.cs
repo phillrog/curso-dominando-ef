@@ -54,7 +54,32 @@ namespace DominandoEFCore
             //ConversorCustomizado();
             //PropriedadesDeSombra();
             //TrabalhandoComPropriedadesDeSombra();
-            TiposDePropriedades();
+            //TiposDePropriedades();
+            Relacionamento1Para1();
+        }
+
+        static void Relacionamento1Para1()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var estado = new Estado
+            {
+                Nome = "Sergipe",
+                Governador = new Governador { Nome = "Rafael Almeida" }
+            };
+
+            db.Estados.Add(estado);
+
+            db.SaveChanges();
+
+            var estados = db.Estados.Include(d=> d.Governador).AsNoTracking().ToList();
+
+            estados.ForEach(est =>
+            {
+                Console.WriteLine($"Estado: {est.Nome}, Governador: {est.Governador.Nome}");
+            });
         }
 
         static void TiposDePropriedades()
