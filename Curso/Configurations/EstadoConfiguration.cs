@@ -15,6 +15,11 @@ namespace Curso.Configurations
                 .HasForeignKey<Governador>(p=>p.EstadoReference);
 
             builder.Navigation(p=>p.Governador).AutoInclude();
+
+            builder.HasMany(d=> d.Cidades)
+            .WithOne(p=> p.Estado)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
