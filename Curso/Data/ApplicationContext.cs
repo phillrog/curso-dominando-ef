@@ -20,6 +20,7 @@ namespace Curso.Data
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Ator> Atores { get; set; }
         public DbSet<Ator> Filmes { get; set; }
+        public DbSet<Documento> Documentos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection="Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
