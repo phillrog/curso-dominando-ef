@@ -58,7 +58,48 @@ namespace DominandoEFCore
             //Relacionamento1Para1();
             //Relacionamento1ParaMuitos();
             //RelacionamentoMuitosParaMuitos();
-            CampoDeApoio();
+            //CampoDeApoio();
+        }
+
+        static void ExemploTPH()
+        {
+            using (var db = NovaConexao())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var pessoa = new Pessoa { Nome = "Fulano de Tal" };
+
+                var instrutor = new Instrutor { Nome = "Rafael Almeida", Tecnologia = ".NET", Desde = DateTime.Now };
+
+                var aluno = new Aluno { Nome = "Maria Thysbe", Idade = 31, DataContrato = DateTime.Now.AddDays(-1) };
+
+                db.AddRange(pessoa, instrutor, aluno);
+                db.SaveChanges();
+
+                var pessoas = db.Pessoas.AsNoTracking().ToArray();
+                var instrutores = db.Instrutores.AsNoTracking().ToArray();
+                //var alunos = db.Alunos.AsNoTracking().ToArray();
+                var alunos = db.Pessoas.OfType<Aluno>().AsNoTracking().ToArray();
+
+                Console.WriteLine("Pessoas **************");
+                foreach (var p in pessoas)
+                {
+                    Console.WriteLine($"Id: {p.Id} -> {p.Nome}");
+                }
+
+                Console.WriteLine("Instrutores **************");
+                foreach (var p in instrutores)
+                {
+                    Console.WriteLine($"Id: {p.Id} -> {p.Nome}, Tecnologia: {p.Tecnologia}, Desde: {p.Desde}");
+                }
+
+                Console.WriteLine("Alunos **************");
+                foreach (var p in alunos)
+                {
+                    Console.WriteLine($"Id: {p.Id} -> {p.Nome}, Idade: {p.Idade}, Data do Contrato: {p.DataContrato}");
+                }
+            }
         }
 
         static void CampoDeApoio()
