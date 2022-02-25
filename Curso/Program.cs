@@ -61,7 +61,29 @@ namespace DominandoEFCore
             //RelacionamentoMuitosParaMuitos();
             //CampoDeApoio();
             //ExemploTPH();
-            PacotesDePropriedades();
+            //PacotesDePropriedades();
+            Atributos();
+        }
+
+        static void Atributos()
+        {
+            using (var db = NovaConexao())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+                
+                var script = db.Database.GenerateCreateScript();
+
+                Console.WriteLine(script);
+
+                db.Atributos.Add(new Atributo
+                {
+                    Descricao = "Exemplo",
+                    Observacao = "Observacao"
+                });
+
+                db.SaveChanges();
+            }
         }
 
         static void PacotesDePropriedades()
