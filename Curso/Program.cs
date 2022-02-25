@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Curso.Domain;
 using Microsoft.Data.SqlClient;
@@ -59,6 +60,37 @@ namespace DominandoEFCore
             //Relacionamento1ParaMuitos();
             //RelacionamentoMuitosParaMuitos();
             //CampoDeApoio();
+            //ExemploTPH();
+            PacotesDePropriedades();
+        }
+
+        static void PacotesDePropriedades()
+        {
+            using (var db = NovaConexao())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var configuracao = new Dictionary<string, object>
+                {
+                    ["Chave"] = "SenhaBancoDeDados",
+                    ["Valor"] = Guid.NewGuid().ToString()
+                };
+
+                db.Configuracoes.Add(configuracao);
+                db.SaveChanges();
+
+                var configuracoes = db
+                    .Configuracoes
+                    .AsNoTracking()
+                    .Where(p => p["Chave"] == "SenhaBancoDeDados")
+                    .ToArray();
+
+                foreach (var dic in configuracoes)
+                {
+                    Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["Valor"]}");
+                }
+            }
         }
 
         static void ExemploTPH()
