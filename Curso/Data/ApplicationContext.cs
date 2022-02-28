@@ -65,6 +65,14 @@ namespace Curso.Data
             .HasMax(10)
             .IsCyclic();
 
+            modelBuilder
+                .Entity<Funcao>(conf=>
+                {
+                    conf.Property<string>("PropriedadeSombra")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasDefaultValueSql("'Teste'");
+                });
+
             // modelBuilder.Entity<Departamento>().Property(p => p.Id)
             // .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia");
 
