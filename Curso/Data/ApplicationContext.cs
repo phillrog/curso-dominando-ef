@@ -28,6 +28,7 @@ namespace Curso.Data
         public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
         public DbSet<Atributo> Atributos { get; set; }
         public DbSet<Aeroporto> Aeroportos { get; set; }
+        public DbSet<Funcao> Funcoes {get;set;}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection="Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
