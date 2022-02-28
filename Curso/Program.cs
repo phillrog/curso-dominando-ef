@@ -66,8 +66,27 @@ namespace DominandoEFCore
             //FuncoesDeDatas();
             //FuncaoLike();
             //FuncaoDataLength();
+            // FuncaoProperty();
+            FuncaoCollate();
         }
+        static void FuncaoCollate()
+        {
+            using (var db = NovaConexao())
+            {
 
+                var consulta1 = db
+                    .Funcoes
+                    .FirstOrDefault(p=> EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "Tela");
+
+                var consulta2 = db
+                    .Funcoes
+                    .FirstOrDefault(p=> EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela");
+
+                Console.WriteLine($"Consulta1: {consulta1?.Descricao1}");
+                
+                Console.WriteLine($"Consulta2: {consulta2?.Descricao1}");
+            }
+        }
         static void FuncaoProperty()
         {
             ApagarCriarBancoDeDados();
