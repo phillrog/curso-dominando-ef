@@ -63,8 +63,33 @@ namespace DominandoEFCore
             //ExemploTPH();
             //PacotesDePropriedades();
             //Atributos();
+            //FuncoesDeDatas();
+            FuncaoLike();
         }
+        
+        static void FuncaoLike()
+        {
+            using (var db = NovaConexao())
+            {
+                var script = db.Database.GenerateCreateScript();
 
+                Console.WriteLine(script);
+
+                var dados = db
+                    .Funcoes
+                    .AsNoTracking()
+                    //.Where(p=> EF.Functions.Like(p.Descricao1, "Bo%"))
+                    .Where(p=> EF.Functions.Like(p.Descricao1, "B[ao]%"))
+                    .Select(p => p.Descricao1)
+                    .ToArray();
+
+                Console.WriteLine("Resultado:");
+                foreach (var descricao in dados)
+                {
+                    Console.WriteLine(descricao);
+                }
+            }
+        }
         static void FuncoesDeDatas()
         {
             ApagarCriarBancoDeDados();
