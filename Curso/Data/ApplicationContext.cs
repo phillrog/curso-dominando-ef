@@ -39,6 +39,7 @@ namespace Curso.Data
                     .CommandTimeout(5)
                     .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null)
                 )
+                .AddInterceptors(new Interceptadores.InterceptadorDeComandos())
                 .EnableSensitiveDataLogging()                
                 // .UseLazyLoadingProxies()
                 .LogTo(Console.WriteLine, LogLevel.Information);
