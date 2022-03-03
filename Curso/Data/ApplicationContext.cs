@@ -41,6 +41,7 @@ namespace Curso.Data
                 )
                 .AddInterceptors(new Interceptadores.InterceptadorDeComandos())
                 .AddInterceptors(new Interceptadores.InterceptadorDeConexao())
+                .AddInterceptors(new Interceptadores.InterceptadorPersistencia())
                 .EnableSensitiveDataLogging()                
                 // .UseLazyLoadingProxies()
                 .LogTo(Console.WriteLine, LogLevel.Information);
