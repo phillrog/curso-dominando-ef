@@ -40,6 +40,7 @@ namespace Curso.Data
                     .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null)
                 )
                 .AddInterceptors(new Interceptadores.InterceptadorDeComandos())
+                .AddInterceptors(new Interceptadores.InterceptadorDeConexao())
                 .EnableSensitiveDataLogging()                
                 // .UseLazyLoadingProxies()
                 .LogTo(Console.WriteLine, LogLevel.Information);
