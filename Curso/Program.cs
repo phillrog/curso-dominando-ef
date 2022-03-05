@@ -69,7 +69,46 @@ namespace DominandoEFCore
             // FuncaoProperty();
             // FuncaoCollate();
             //TesteInterceptacao();
-            TesteInterceptacaoSaveChanges();
+            //TesteInterceptacaoSaveChanges();
+            ComportamentoPadrao();
+        }
+
+        static void ComportamentoPadrao()
+        {
+            CadastrarLivro();
+
+            using (var db = NovaConexao())
+            {                 
+                var livro = db.Livros.FirstOrDefault(p=>p.Id == 1);
+                livro.Autor = "Rafael Almeida"; 
+
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Dominando o Entity Framework Core",
+                        Autor = "Rafael Almeida"
+                    }); 
+
+                db.SaveChanges();                 
+            }
+        }
+
+        static void CadastrarLivro()
+        {
+            using (var db = NovaConexao())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Introdução ao Entity Framework Core",
+                        Autor = "Rafael"
+                    }); 
+
+                db.SaveChanges();
+            }
         }
 
         static void TesteInterceptacaoSaveChanges()
