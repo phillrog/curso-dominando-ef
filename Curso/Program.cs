@@ -24,12 +24,12 @@ namespace DominandoEFCore
             //MigracoesPendentes(); //6
             // AplicarMigracaoEmTempoDeExecucao(); //7
             //TodasAsMigracoes(); //8
-           // MigracoesJaAplicadas(); 9
+            // MigracoesJaAplicadas(); 9
 
-           //ScriptGeralDoBancoDeDados();
+            //ScriptGeralDoBancoDeDados();
 
-           //CarregamentoAdiantado();
-           //CarregamentoExplicito();
+            //CarregamentoAdiantado();
+            //CarregamentoExplicito();
             //CarregamentoLento();
 
             //FiltroGlobal();
@@ -72,24 +72,49 @@ namespace DominandoEFCore
             //TesteInterceptacaoSaveChanges();
             ComportamentoPadrao();
         }
-
-        static void ComportamentoPadrao()
+        static void GerenciandoTransacaoManualmente()
         {
             CadastrarLivro();
 
             using (var db = NovaConexao())
-            {                 
-                var livro = db.Livros.FirstOrDefault(p=>p.Id == 1);
-                livro.Autor = "Rafael Almeida"; 
+            {
+                var transacao = db.Database.BeginTransaction();
+
+                var livro = db.Livros.FirstOrDefault(p => p.Id == 1);
+                livro.Autor = "Rafael Almeida";
+                db.SaveChanges();
+
+                Console.ReadKey();
 
                 db.Livros.Add(
                     new Livro
                     {
                         Titulo = "Dominando o Entity Framework Core",
                         Autor = "Rafael Almeida"
-                    }); 
+                    });
 
-                db.SaveChanges();                 
+                db.SaveChanges();
+
+                transacao.Commit();
+            }
+        }
+        static void ComportamentoPadrao()
+        {
+            CadastrarLivro();
+
+            using (var db = NovaConexao())
+            {
+                var livro = db.Livros.FirstOrDefault(p => p.Id == 1);
+                livro.Autor = "Rafael Almeida";
+
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Dominando o Entity Framework Core",
+                        Autor = "Rafael Almeida"
+                    });
+
+                db.SaveChanges();
             }
         }
 
@@ -105,7 +130,7 @@ namespace DominandoEFCore
                     {
                         Titulo = "Introdução ao Entity Framework Core",
                         Autor = "Rafael"
-                    }); 
+                    });
 
                 db.SaveChanges();
             }
@@ -134,7 +159,7 @@ namespace DominandoEFCore
                 var consulta = db
                     .Funcoes
                     .TagWith("Use NOLOCK")
-                    .FirstOrDefault(); 
+                    .FirstOrDefault();
 
                 Console.WriteLine($"Consulta: {consulta?.Descricao1}");
             }
@@ -146,14 +171,14 @@ namespace DominandoEFCore
 
                 var consulta1 = db
                     .Funcoes
-                    .FirstOrDefault(p=> EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "Tela");
+                    .FirstOrDefault(p => EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "Tela");
 
                 var consulta2 = db
                     .Funcoes
-                    .FirstOrDefault(p=> EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela");
+                    .FirstOrDefault(p => EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela");
 
                 Console.WriteLine($"Consulta1: {consulta1?.Descricao1}");
-                
+
                 Console.WriteLine($"Consulta2: {consulta2?.Descricao1}");
             }
         }
@@ -166,17 +191,17 @@ namespace DominandoEFCore
                 var resultado = db
                     .Funcoes
                     //.AsNoTracking()
-                    .FirstOrDefault(p=> EF.Property<string>(p, "PropriedadeSombra") == "Teste");
+                    .FirstOrDefault(p => EF.Property<string>(p, "PropriedadeSombra") == "Teste");
 
                 var propriedadeSombra = db
                     .Entry(resultado)
                     .Property<string>("PropriedadeSombra")
                     .CurrentValue;
 
-                Console.WriteLine("Resultado:");     
-                Console.WriteLine(propriedadeSombra); 
+                Console.WriteLine("Resultado:");
+                Console.WriteLine(propriedadeSombra);
             }
-        } 
+        }
 
         static void FuncaoDataLength()
         {
@@ -185,7 +210,7 @@ namespace DominandoEFCore
                 var resultado = db
                     .Funcoes
                     .AsNoTracking()
-                    .Select(p => new 
+                    .Select(p => new
                     {
                         TotalBytesCampoData = EF.Functions.DataLength(p.Data1),
                         TotalBytes1 = EF.Functions.DataLength(p.Descricao1),
@@ -195,12 +220,12 @@ namespace DominandoEFCore
                     })
                     .FirstOrDefault();
 
-                Console.WriteLine("Resultado:"); 
+                Console.WriteLine("Resultado:");
 
-                Console.WriteLine(resultado); 
+                Console.WriteLine(resultado);
             }
         }
-        
+
         static void FuncaoLike()
         {
             using (var db = NovaConexao())
@@ -213,7 +238,7 @@ namespace DominandoEFCore
                     .Funcoes
                     .AsNoTracking()
                     //.Where(p=> EF.Functions.Like(p.Descricao1, "Bo%"))
-                    .Where(p=> EF.Functions.Like(p.Descricao1, "B[ao]%"))
+                    .Where(p => EF.Functions.Like(p.Descricao1, "B[ao]%"))
                     .Select(p => p.Descricao1)
                     .ToArray();
 
@@ -288,7 +313,7 @@ namespace DominandoEFCore
             {
                 db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
-                
+
                 var script = db.Database.GenerateCreateScript();
 
                 Console.WriteLine(script);
@@ -489,7 +514,7 @@ namespace DominandoEFCore
 
             db.SaveChanges();
 
-            var estados = db.Estados.Include(d=> d.Governador).AsNoTracking().ToList();
+            var estados = db.Estados.Include(d => d.Governador).AsNoTracking().ToList();
 
             estados.ForEach(est =>
             {
@@ -602,11 +627,11 @@ namespace DominandoEFCore
             using var db = NovaConexao();
 
             var strategy = db.Database.CreateExecutionStrategy();
-            strategy.Execute(()=>
+            strategy.Execute(() =>
             {
                 using var transaction = db.Database.BeginTransaction();
 
-                db.Departamentos.Add(new Departamento { Descricao = "Departamento Transacao"});
+                db.Departamentos.Add(new Departamento { Descricao = "Departamento Transacao" });
                 db.SaveChanges();
 
                 transaction.Commit();
@@ -667,7 +692,7 @@ namespace DominandoEFCore
                 .FromSqlInterpolated($"EXECUTE GetDepartamentos {dep}")
                 .ToList();
 
-            foreach(var departamento in departamentos)
+            foreach (var departamento in departamentos)
             {
                 Console.WriteLine(departamento.Descricao);
             }
@@ -693,7 +718,7 @@ namespace DominandoEFCore
                 VALUES (@Descricao, @Ativo, 0)
             END        
             ";
-            
+
             using var db = new Curso.Data.ApplicationContext();
 
             db.Database.ExecuteSqlRaw(criarDepartamento);
@@ -709,7 +734,7 @@ namespace DominandoEFCore
                 SELECT * FROM Departamentos Where Descricao Like @Descricao + '%'
             END        
             ";
-            
+
             using var db = NovaConexao();
 
             db.Database.ExecuteSqlRaw(criarDepartamento);
@@ -781,7 +806,7 @@ namespace DominandoEFCore
                 Console.WriteLine($"Descrição: {departamento.Descricao}");
             }
         }
- 
+
         static void ConsultaInterpolada()
         {
             using var db = NovaConexao();
@@ -949,10 +974,10 @@ namespace DominandoEFCore
 
             foreach (var departamento in departamentos)
             {
-                if(departamento.Id == 2)
+                if (departamento.Id == 2)
                 {
                     //db.Entry(departamento).Collection(p=>p.Funcionarios).Load();
-                    db.Entry(departamento).Collection(p=>p.Funcionarios).Query().Where(p=>p.Id > 2).ToList();
+                    db.Entry(departamento).Collection(p => p.Funcionarios).Query().Where(p => p.Id > 2).ToList();
                 }
 
                 Console.WriteLine("---------------------------------------");
@@ -1078,38 +1103,42 @@ namespace DominandoEFCore
         /// Não é uma boa pratica
         private static void AplicarMigracaoEmTempoDeExecucao()
         {
-           using var db = NovaConexao();
+            using var db = NovaConexao();
 
-           db.Database.Migrate(); 
+            db.Database.Migrate();
         }
 
         /// Detectar migrações que não foram executadas
-        static void MigracoesPendentes(){
-             using var db = NovaConexao();
+        static void MigracoesPendentes()
+        {
+            using var db = NovaConexao();
 
-             var migracoesPendentes = db.Database.GetPendingMigrations();
-             Console.WriteLine($"Total: {migracoesPendentes.Count()}");
-             foreach (var migracao in migracoesPendentes)
-             {
-                 Console.WriteLine($"Migração: {migracao}");
-             }
+            var migracoesPendentes = db.Database.GetPendingMigrations();
+            Console.WriteLine($"Total: {migracoesPendentes.Count()}");
+            foreach (var migracao in migracoesPendentes)
+            {
+                Console.WriteLine($"Migração: {migracao}");
+            }
         }
-        static void SqlInjection(){
+        static void SqlInjection()
+        {
             using var db = NovaConexao();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
 
             db.Departamentos.AddRange(
-                new Curso.Domain.Departamento {
+                new Curso.Domain.Departamento
+                {
                     Descricao = "Departamento 01"
                 },
-                new Curso.Domain.Departamento {
+                new Curso.Domain.Departamento
+                {
                     Descricao = "Departamento 02"
                 }
             );
 
             db.SaveChanges();
-            
+
             foreach (var departamento in db.Departamentos.AsNoTracking())
             {
                 Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao} ");
@@ -1133,10 +1162,12 @@ namespace DominandoEFCore
                 Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao} ");
             }
         }
-        static void ExecuteSQL(){
+        static void ExecuteSQL()
+        {
             using var db = NovaConexao();
             // Forma 1 - criando comando
-            using (var cmd = db.Database.GetDbConnection().CreateCommand()){
+            using (var cmd = db.Database.GetDbConnection().CreateCommand())
+            {
                 cmd.CommandText = "SELECT 1";
                 cmd.ExecuteNonQuery();
             }
@@ -1148,7 +1179,8 @@ namespace DominandoEFCore
             // Forma 3 - parametros em interpolação
             db.Database.ExecuteSqlInterpolated($"update departamentos set descricap={descricao} where Id = 1");
         }
-        static Curso.Data.ApplicationContext NovaConexao() {
+        static Curso.Data.ApplicationContext NovaConexao()
+        {
             return new Curso.Data.ApplicationContext();
         }
 
@@ -1161,16 +1193,17 @@ namespace DominandoEFCore
 
             var conexao = db.Database.GetDbConnection();
 
-            conexao.StateChange += (_, __ ) => ++ _count; 
+            conexao.StateChange += (_, __) => ++_count;
 
-            if(gerenciarEstadoConexao){
+            if (gerenciarEstadoConexao)
+            {
                 conexao.Open();
             }
 
             for (int i = 0; i < 200; i++)
             {
                 db.Departamentos.AsNoTracking().Any();
-            } 
+            }
 
             time.Stop();
             var msg = $"Tempo: {time.Elapsed.ToString() }, {gerenciarEstadoConexao}, Contador: {_count}";
@@ -1178,7 +1211,8 @@ namespace DominandoEFCore
             Console.WriteLine(msg);
         }
 
-        static void EnsureCreatedAndDeleted() {
+        static void EnsureCreatedAndDeleted()
+        {
             using var db = new Curso.Data.ApplicationContext();
             //db.Database.EnsureCreated();
             db.Database.EnsureDeleted();
@@ -1186,7 +1220,8 @@ namespace DominandoEFCore
         /// Todas vez que EnsureCreated é executado é feito uma validação se já foram criados
         /// as tabelas como contexto cidade ele checa isso ele não vai criar a tabela cidade porque já identificou a criação
         /// para contornar isso é feito a criação "manualmente" com databaseCreator
-        static void GapEnsureCreated() {
+        static void GapEnsureCreated()
+        {
             using var db1 = new Curso.Data.ApplicationContext();
             using var db2 = new Curso.Data.ApplicationContextCidade();
 
@@ -1197,10 +1232,11 @@ namespace DominandoEFCore
             databaseCreator.CreateTables();
         }
 
-        static void HealthCheckBancoDeDadosAntes(){
+        static void HealthCheckBancoDeDadosAntes()
+        {
             using var db = new Curso.Data.ApplicationContext();
 
-            try 
+            try
             {
                 //1
                 var connection = db.Database.GetDbConnection();
@@ -1213,9 +1249,10 @@ namespace DominandoEFCore
             catch (System.Exception ex)
             {
                 Console.WriteLine("Banco de dados não está funcionando");
-            } 
+            }
         }
-        static void HealthCheckBancoDeDadosAgora(){
+        static void HealthCheckBancoDeDadosAgora()
+        {
             using var db = new Curso.Data.ApplicationContext();
             var canConnect = db.Database.CanConnect();
 
