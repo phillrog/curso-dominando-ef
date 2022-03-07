@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using Curso.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +74,64 @@ namespace DominandoEFCore
             // ComportamentoPadrao();
             // GerenciandoTransacaoManualmente();
             // ReverterTransacao();
-            SalvarPontoTransacao();
+            // SalvarPontoTransacao();
+            TransactionScope();
+        }
+        static void TransactionScope()
+        {
+            CadastrarLivro();
+
+            var transactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+            };
+
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+            {
+                ConsultarAtualizar();
+                CadastraLivroEnterprise();
+                CadastrarLivroDominandoEFCore();
+
+                scope.Complete();
+            }
+        }
+
+        static void ConsultarAtualizar()
+        {
+            using (var db = NovaConexao())
+            {
+                var livro = db.Livros.FirstOrDefault(p => p.Id == 1);
+                livro.Autor = "Rafael Almeida";
+                db.SaveChanges();
+            }
+        }
+
+        static void CadastraLivroEnterprise()
+        {
+            using (var db =  NovaConexao())
+            {
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "ASP.NET Core Enterprise Applications",
+                        Autor = "Eduardo Pires"
+                    });
+                db.SaveChanges();
+            }
+        }
+
+        static void CadastrarLivroDominandoEFCore()
+        {
+            using (var db =  NovaConexao())
+            {
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Dominando o Entity Framework Core",
+                        Autor = "Rafael Almeida"
+                    });
+                db.SaveChanges();
+            }
         }
         static void SalvarPontoTransacao()
         {
