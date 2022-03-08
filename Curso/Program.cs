@@ -85,7 +85,7 @@ namespace DominandoEFCore
 
             using var db = new Curso.Data.ApplicationContext();
 
-            var resultado = db.Livros.Select(p => Curso.Data.ApplicationContext.Left(p.Titulo, 10));
+            var resultado = db.Livros.Select(p => Curso.Funcoes.MinhasFuncoes.Left(p.Titulo, 10));
             foreach (var parteTitulo in resultado)
             {
                 Console.WriteLine(parteTitulo);

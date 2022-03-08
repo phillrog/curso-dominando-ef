@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Curso.Domain;
+using Curso.Funcoes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Proxies;
@@ -132,6 +133,8 @@ namespace Curso.Data
                     .HasColumnType("VARCHAR(255)")
                     .IsRequired();
             });
+
+            Curso.Funcoes.MinhasFuncoes.RegistarFuncoes(modelBuilder);
         }
 
         public override void Dispose()
@@ -140,12 +143,12 @@ namespace Curso.Data
             _writer.Dispose();
         }
 
+        
+        // [DbFunction(name: "LEFT", IsBuiltIn = true)]
+        // public static string Left(string dados, int quantidade)
+        // {
+        //     throw new NotImplementedException();
 
-        [DbFunction(name: "LEFT", IsBuiltIn = true)]
-        public static string Left(string dados, int quantidade)
-        {
-            throw new NotImplementedException();
-
-        }
+        // }
     }
 }
