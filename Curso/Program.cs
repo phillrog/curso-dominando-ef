@@ -77,7 +77,29 @@ namespace DominandoEFCore
             // SalvarPontoTransacao();
             //TransactionScope();
             // CadastrarLivro2();
-            FuncaoDefinidaPeloUsuario();
+            // FuncaoDefinidaPeloUsuario();
+            DateDIFF();
+        }
+
+        static void DateDIFF()
+        {
+            CadastrarLivro();
+
+            using var db = new Curso.Data.ApplicationContext();
+
+            /*var resultado = db
+                .Livros
+                .Select(p=>  EF.Functions.DateDiffDay(p.CadastradoEm, DateTime.Now));
+                */
+
+            var resultado = db
+                .Livros
+                .Select(p => Curso.Funcoes.MinhasFuncoes.DateDiff("DAY", p.CadastradoEm, DateTime.Now));
+
+            foreach (var diff in resultado)
+            {
+                Console.WriteLine(diff);
+            }
         }
 
         static void FuncaoDefinidaPeloUsuario()
