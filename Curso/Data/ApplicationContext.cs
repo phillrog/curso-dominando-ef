@@ -28,11 +28,11 @@ namespace Curso.Data
         public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
         public DbSet<Atributo> Atributos { get; set; }
         public DbSet<Aeroporto> Aeroportos { get; set; }
-        public DbSet<Funcao> Funcoes {get;set;}
-        public DbSet<Livro> Livros {get;set;}
+        public DbSet<Funcao> Funcoes { get; set; }
+        public DbSet<Livro> Livros { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            const string strConnection="Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
+            const string strConnection = "Server=localhost,1435;Database=DevIO2; User=sa; Password=yourStrong#@Teste;Trusted_Connection=False;Persist Security Info=False; pooling=false;MultipleActiveResultSets=True";
             optionsBuilder
                 .UseSqlServer(strConnection,
                 p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
@@ -43,34 +43,34 @@ namespace Curso.Data
                 .AddInterceptors(new Interceptadores.InterceptadorDeComandos())
                 .AddInterceptors(new Interceptadores.InterceptadorDeConexao())
                 .AddInterceptors(new Interceptadores.InterceptadorPersistencia())
-                .EnableSensitiveDataLogging()                
+                .EnableSensitiveDataLogging()
                 // .UseLazyLoadingProxies()
                 .LogTo(Console.WriteLine, LogLevel.Information);
-                // .LogTo(Console.WriteLine, new [] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
-                // LogLevel.Information,
-                // DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
-                // );
-                // .LogTo(_writer.WriteLine, LogLevel.Information);
-                // .EnableDetailedErrors();
-        }        
+            // .LogTo(Console.WriteLine, new [] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
+            // LogLevel.Information,
+            // DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
+            // );
+            // .LogTo(_writer.WriteLine, LogLevel.Information);
+            // .EnableDetailedErrors();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Departamento>().HasQueryFilter(p=>!p.Excluido);
+            modelBuilder.Entity<Departamento>().HasQueryFilter(p => !p.Excluido);
             // modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
             modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
 
             modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
                 .UseCollation("SQL_Latin1_General_CP1_CS_AS");
 
-            modelBuilder.HasSequence("MinhaSequencia","sequencias").StartsAt(1)
+            modelBuilder.HasSequence("MinhaSequencia", "sequencias").StartsAt(1)
             .IncrementsBy(2)
             .HasMin(1)
             .HasMax(10)
             .IsCyclic();
 
             modelBuilder
-                .Entity<Funcao>(conf=>
+                .Entity<Funcao>(conf =>
                 {
                     conf.Property<string>("PropriedadeSombra")
                         .HasColumnType("VARCHAR(100)")
@@ -138,6 +138,14 @@ namespace Curso.Data
         {
             base.Dispose();
             _writer.Dispose();
+        }
+
+
+        [DbFunction(name: "LEFT", IsBuiltIn = true)]
+        public static string Left(string dados, int quantidade)
+        {
+            throw new NotImplementedException();
+
         }
     }
 }

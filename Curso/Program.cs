@@ -75,7 +75,39 @@ namespace DominandoEFCore
             // GerenciandoTransacaoManualmente();
             // ReverterTransacao();
             // SalvarPontoTransacao();
-            TransactionScope();
+            //TransactionScope();
+            CadastrarLivro2();
+        }
+
+        static void FuncaoLEFT()
+        {
+            CadastrarLivro();
+
+            using var db = new Curso.Data.ApplicationContext();
+
+            var resultado = db.Livros.Select(p => Curso.Data.ApplicationContext.Left(p.Titulo, 10));
+            foreach (var parteTitulo in resultado)
+            {
+                Console.WriteLine(parteTitulo);
+            }
+        }
+        static void CadastrarLivro2()
+        {
+            using (var db = NovaConexao())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Introdução ao Entity Framework Core",
+                        Autor = "Rafael",
+                        CadastradoEm = DateTime.Now.AddDays(-1)
+                    });
+
+                db.SaveChanges();
+            }
         }
         static void TransactionScope()
         {
@@ -108,7 +140,7 @@ namespace DominandoEFCore
 
         static void CadastraLivroEnterprise()
         {
-            using (var db =  NovaConexao())
+            using (var db = NovaConexao())
             {
                 db.Livros.Add(
                     new Livro
@@ -122,7 +154,7 @@ namespace DominandoEFCore
 
         static void CadastrarLivroDominandoEFCore()
         {
-            using (var db =  NovaConexao())
+            using (var db = NovaConexao())
             {
                 db.Livros.Add(
                     new Livro
