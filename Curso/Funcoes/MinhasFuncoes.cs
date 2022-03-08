@@ -12,6 +12,11 @@ namespace Curso.Funcoes
             throw new NotImplementedException();
         }
 
+        public static string LetrasMaiusculas(string dados)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void RegistarFuncoes(ModelBuilder modelBuilder)
         {
             var funcoes = typeof(MinhasFuncoes).GetMethods().Where(p=> Attribute.IsDefined(p, typeof(DbFunctionAttribute)));

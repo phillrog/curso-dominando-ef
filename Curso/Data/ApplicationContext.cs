@@ -139,6 +139,11 @@ namespace Curso.Data
                 .HasDbFunction(_minhaFuncao)
                 .HasName("LEFT")
                 .IsBuiltIn();
+
+            modelBuilder
+                .HasDbFunction(_letrasMaiusculas)
+                .HasName("ConverterParaLetrasMaiusculas")
+                .HasSchema("dbo");
         }
 
         public override void Dispose()
@@ -149,6 +154,10 @@ namespace Curso.Data
 
         private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes)
                             .GetRuntimeMethod("Left", new[] { typeof(string), typeof(int) });
+
+        private static MethodInfo _letrasMaiusculas = typeof(MinhasFuncoes)
+                            .GetRuntimeMethod(nameof(MinhasFuncoes.LetrasMaiusculas),
+                             new[] { typeof(string) });
         // [DbFunction(name: "LEFT", IsBuiltIn = true)]
         // public static string Left(string dados, int quantidade)
         // {
