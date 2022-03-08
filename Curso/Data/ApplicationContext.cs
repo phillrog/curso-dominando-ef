@@ -134,7 +134,11 @@ namespace Curso.Data
                     .IsRequired();
             });
 
-            Curso.Funcoes.MinhasFuncoes.RegistarFuncoes(modelBuilder);
+            // Curso.Funcoes.MinhasFuncoes.RegistarFuncoes(modelBuilder);
+            modelBuilder
+                .HasDbFunction(_minhaFuncao)
+                .HasName("LEFT")
+                .IsBuiltIn();
         }
 
         public override void Dispose()
@@ -143,7 +147,8 @@ namespace Curso.Data
             _writer.Dispose();
         }
 
-        
+        private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes)
+                            .GetRuntimeMethod("Left", new[] { typeof(string), typeof(int) });
         // [DbFunction(name: "LEFT", IsBuiltIn = true)]
         // public static string Left(string dados, int quantidade)
         // {
