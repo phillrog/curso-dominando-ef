@@ -55,6 +55,8 @@ namespace Curso.Data
             // );
             // .LogTo(_writer.WriteLine, LogLevel.Information);
             // .EnableDetailedErrors();
+
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

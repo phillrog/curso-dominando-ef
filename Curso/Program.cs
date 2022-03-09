@@ -82,8 +82,21 @@ namespace DominandoEFCore
             //Setup();
             //ConsultaProjetada();
             // ConsultaNaoRastreada();
-            ConsultaComResolucaoDeIdentidade();
+            // ConsultaComResolucaoDeIdentidade();
+            ConsultaCustomizada();
         }        
+
+        static void ConsultaCustomizada()
+        {
+            using var db = NovaConexao();
+
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+            
+            var funcionarios = db.Funcionarios
+                //.AsNoTrackingWithIdentityResolution()
+                .Include(p => p.Departamento)
+                .ToList();
+        }
 
         static void Setup()
         {
