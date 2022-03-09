@@ -30,7 +30,7 @@ namespace Curso.Domain
         {
             _lazyLoader = lazyLoader;
         }
-
+        public byte[] Image { get; set; } 
         private List<Funcionario> _funcionarios;
         public List<Funcionario> Funcionarios 
         {

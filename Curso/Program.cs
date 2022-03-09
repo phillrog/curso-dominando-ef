@@ -84,16 +84,55 @@ namespace DominandoEFCore
             // ConsultaNaoRastreada();
             // ConsultaComResolucaoDeIdentidade();
             // ConsultaCustomizada();
-            ConsultaProjetadaERastreada();
-        }        
+            // ConsultaProjetadaERastreada();
+            //Inserir_200_Departamentos_Com_1MB();
+            ConsultaProjetadaPerformance();
+        }
 
+        static void Inserir_200_Departamentos_Com_1MB()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var random = new Random();
+
+            db.Departamentos.AddRange(Enumerable.Range(1, 200).Select(p =>
+                new Departamento
+                {
+                    Descricao = "Departamento Teste",
+                    Image = getBytes()
+                }));
+
+            db.SaveChanges();
+
+            byte[] getBytes()
+            {
+                var buffer = new byte[1024 * 1024];
+                random.NextBytes(buffer);
+
+                return buffer;
+            }
+        }
+
+        static void ConsultaProjetadaPerformance()
+        {
+            using var db = NovaConexao();
+
+            //var departamentos = db.Departamentos.ToArray();
+            var departamentos = db.Departamentos.Select(p => p.Descricao).ToArray();
+
+            var memoria = (System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024) + " MB";
+
+            Console.WriteLine(memoria);
+        }
         static void ConsultaProjetadaERastreada()
         {
             using var db = NovaConexao();
- 
+
             var departamentos = db.Departamentos
                 .Include(p => p.Funcionarios)
-                .Select(p=> new 
+                .Select(p => new
                 {
                     Departamento = p,
                     TotalFuncionarios = p.Funcionarios.Count()
@@ -110,7 +149,7 @@ namespace DominandoEFCore
             using var db = NovaConexao();
 
             db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-            
+
             var funcionarios = db.Funcionarios
                 //.AsNoTrackingWithIdentityResolution()
                 .Include(p => p.Departamento)
@@ -147,7 +186,7 @@ namespace DominandoEFCore
 
         static void ConsultaNaoRastreada()
         {
-            using var db =  NovaConexao();
+            using var db = NovaConexao();
 
             var funcionarios = db.Funcionarios.AsNoTracking().Include(p => p.Departamento).ToList();
         }
