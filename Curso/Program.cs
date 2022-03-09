@@ -83,8 +83,27 @@ namespace DominandoEFCore
             //ConsultaProjetada();
             // ConsultaNaoRastreada();
             // ConsultaComResolucaoDeIdentidade();
-            ConsultaCustomizada();
+            // ConsultaCustomizada();
+            ConsultaProjetadaERastreada();
         }        
+
+        static void ConsultaProjetadaERastreada()
+        {
+            using var db = NovaConexao();
+ 
+            var departamentos = db.Departamentos
+                .Include(p => p.Funcionarios)
+                .Select(p=> new 
+                {
+                    Departamento = p,
+                    TotalFuncionarios = p.Funcionarios.Count()
+                })
+                .ToList();
+
+            departamentos[0].Departamento.Descricao = "Departamento Teste Atualizado";
+
+            db.SaveChanges();
+        }
 
         static void ConsultaCustomizada()
         {
