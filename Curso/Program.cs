@@ -78,7 +78,56 @@ namespace DominandoEFCore
             //TransactionScope();
             // CadastrarLivro2();
             // FuncaoDefinidaPeloUsuario();
-            DateDIFF();
+            // DateDIFF();
+            //Setup();
+            //ConsultaProjetada();
+            // ConsultaNaoRastreada();
+            ConsultaComResolucaoDeIdentidade();
+        }        
+
+        static void Setup()
+        {
+            using var db = NovaConexao();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Departamentos.Add(new Departamento
+            {
+                Descricao = "Departamento Teste",
+                Ativo = true,
+                Funcionarios = Enumerable.Range(1, 100).Select(p => new Funcionario
+                {
+                    CPF = p.ToString().PadLeft(11, '0'),
+                    Nome = $"Funcionando {p}",
+                    RG = p.ToString()
+                }).ToList()
+            });
+
+            db.SaveChanges();
+        }
+
+        static void ConsultaRastreada()
+        {
+            using var db = NovaConexao();
+
+            var funcionarios = db.Funcionarios.Include(p => p.Departamento).ToList();
+        }
+
+        static void ConsultaNaoRastreada()
+        {
+            using var db =  NovaConexao();
+
+            var funcionarios = db.Funcionarios.AsNoTracking().Include(p => p.Departamento).ToList();
+        }
+
+        static void ConsultaComResolucaoDeIdentidade()
+        {
+            using var db = NovaConexao();
+
+            var funcionarios = db.Funcionarios
+                .AsNoTrackingWithIdentityResolution()
+                .Include(p => p.Departamento)
+                .ToList();
         }
 
         static void DateDIFF()
