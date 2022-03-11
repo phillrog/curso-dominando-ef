@@ -86,7 +86,7 @@ namespace DominandoEFCore
             // ConsultaCustomizada();
             // ConsultaProjetadaERastreada();
             //Inserir_200_Departamentos_Com_1MB();
-            ConsultaProjetadaPerformance();
+            //ConsultaProjetadaPerformance();
         }
 
         static void Inserir_200_Departamentos_Com_1MB()
